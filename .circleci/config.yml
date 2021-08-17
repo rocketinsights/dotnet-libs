@@ -5,9 +5,6 @@ version: 2.1
 orbs:
   windows: circleci/windows@2.4.0
 
-# Variables
-cache_key: dotnet-packages-v1-{{ checksum "RocketInsights/RocketInsights.sln" }}
-
 jobs:
   test:
     description: Setup and run application tests
@@ -18,14 +15,14 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - '{{ cache_key }}'
+            - dotnet-packages-v1-{{ checksum "RocketInsights.sln" }}
       - run:
           name: "Install project dependencies"
           command: dotnet.exe restore
       - save_cache:
           paths:
             - C:\Users\circleci\.nuget\packages
-          key: '{{ cache_key }}'
+          key: dotnet-packages-v1-{{ checksum "RocketInsights.sln" }}
       - run:
           name: "Run Application Tests"
           command: dotnet.exe test -v n --results-directory:test_coverage --collect:"XPlat Code Coverage"
