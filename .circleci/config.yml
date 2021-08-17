@@ -13,7 +13,7 @@ jobs:
       name: windows/default
     steps:
       - checkout
-      - info:
+      - run:
           name: "Information"
           command: pwd
       - restore_cache:
