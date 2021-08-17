@@ -33,7 +33,7 @@ jobs:
           name: "Print Working Directory"
           command: pwd
       - store_artifacts:
-          path: C:\Users\circleci\project\src\test_coverage
+          path: C:\Users\circleci\project\test_coverage
   build:
     description: Build application with Release configuration
     working_directory: ~/project
