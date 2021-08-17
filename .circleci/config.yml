@@ -11,6 +11,7 @@ cache_key: dotnet-packages-v1-{{ checksum "RocketInsights/RocketInsights.sln" }}
 jobs:
   test:
     description: Setup and run application tests
+    working_directory: ~/src
     executor:
       name: windows/default
     steps:
@@ -35,6 +36,7 @@ jobs:
           path: C:\Users\circleci\project\test_coverage
   build:
     description: Build application with Release configuration
+    working_directory: ~/src
     executor:
       name: windows/default
     steps:
