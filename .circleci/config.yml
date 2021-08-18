@@ -8,42 +8,38 @@ orbs:
 jobs:
   test:
     description: Setup and run application tests
-    working_directory: ~/src
+    working_directory: ~/project
     executor:
       name: windows/default
     steps:
       - checkout
-      - run:
-          name: "Information"
-          command: pwd
       - restore_cache:
           keys:
-            - dotnet-packages-v1-{{ checksum "./RocketInsights.sln" }}
+            - dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
       - run:
           name: "Install project dependencies"
-          command: dotnet.exe restore
+          command: dotnet.exe restore ./src/RocketInsights.sln
       - save_cache:
           paths:
             - C:\Users\circleci\.nuget\packages
-          key: dotnet-packages-v1-{{ checksum "RocketInsights.sln" }}
+          key: dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
       - run:
           name: "Run Application Tests"
-          command: dotnet.exe test ./RocketInsights.sln -v n --results-directory:test_coverage --collect:"XPlat Code Coverage"
-      - run:
-          name: "Print Working Directory"
-          command: pwd
+          command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../TestResults/result.xml" --results-directory:test_coverage --collect:"XPlat Code Coverage"
+      - store_test_results:
+          path: C:\Users\circleci\project\src\TestResults
       - store_artifacts:
-          path: C:\Users\circleci\src\test_coverage
+          path: C:\Users\circleci\project\test_coverage
   build:
     description: Build application with Release configuration
-    working_directory: ~/src
+    working_directory: ~/project
     executor:
       name: windows/default
     steps:
       - checkout
       - run:
           name: "Build Application according to some given configuration"
-          command: dotnet.exe ./RocketInsights.sln build --configuration Release
+          command: dotnet.exe build ./src/RocketInsights.sln --configuration Release
 
 workflows:
   test_and_build:
