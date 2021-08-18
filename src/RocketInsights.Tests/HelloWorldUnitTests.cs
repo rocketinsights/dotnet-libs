@@ -19,5 +19,11 @@ namespace RocketInsights.Tests
 
             Assert.AreEqual("foobar", concatenated);
         }
+
+        [TestMethod]
+        public void FailingTest()
+        {
+            Assert.IsTrue(false);
+        }
     }
 }
