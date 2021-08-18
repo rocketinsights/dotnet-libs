@@ -31,13 +31,17 @@ commands:
                 shell: powershell.exe
 
 jobs:
-  test:
+  default:
     description: Setup and run application tests
     working_directory: ~/project
     executor:
       name: windows/default
     steps:
       - checkout
+      - install-aws-cli
+      - run:
+          name: "Versioning"
+          command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj $env:CIRCLE_BUILD_NUM
       - restore_cache:
           keys:
             - dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
@@ -51,24 +55,6 @@ jobs:
       - run:
           name: "Run Application Tests"
           command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../../TestResults/result.xml" --results-directory:TestResults --collect:"XPlat Code Coverage"
-      - store_test_results:
-          path: C:\Users\circleci\project\TestResults
-      - store_artifacts:
-          path: C:\Users\circleci\project\TestResults
-  build:
-    description: Build, Pack, and Publish packages
-    working_directory: ~/project
-    executor:
-      name: windows/default
-    steps:
-      - checkout
-      - install-aws-cli
-      - run:
-          name: "Verify AWS CLI"
-          command: aws --version
-      - run:
-          name: "Versioning"
-          command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj $env:CIRCLE_BUILD_NUM
       - run:
           name: "Packing"
           command: dotnet.exe pack ./src/RocketInsights.sln --output C:\Users\circleci\project\Packages --configuration Release
@@ -77,12 +63,13 @@ jobs:
           command: |
               Write-Host $env:AWS_ACCESS_KEY_ID
               Write-Host $env:AWS_SECRET_ACCESS_KEY
+      - store_test_results:
+          path: C:\Users\circleci\project\TestResults
+      - store_artifacts:
+          path: C:\Users\circleci\project\TestResults
 
 workflows:
-  test_and_build:
+  default:
     jobs:
-      - test
-      - build:
+      - default:
           context: team-dotnet
-          requires:
-            - test
