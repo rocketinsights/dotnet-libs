@@ -13,9 +13,6 @@ jobs:
       name: windows/default
     steps:
       - checkout
-      - run:
-          name: "Versioning"
-          command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj ${CIRCLE_BUILD_NUM}
       - restore_cache:
           keys:
             - dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
@@ -41,8 +38,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Versioning"
+          command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj $env:CIRCLE_BUILD_NUM
+      - run:
           name: "Build Application according to some given configuration"
-          command: dotnet.exe build ./src/RocketInsights.sln --configuration Release
+          command: dotnet.exe pack ./src/RocketInsights.sln --configuration Release
 
 workflows:
   test_and_build:
