@@ -28,7 +28,9 @@ jobs:
           key: dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
       - run:
           name: "Run Application Tests"
-          command: dotnet.exe test ./src/RocketInsights.sln -v n --results-directory:test_coverage --collect:"XPlat Code Coverage"
+          command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../TestResults/result.xml" --results-directory:test_coverage --collect:"XPlat Code Coverage"
+      - store_test_results:
+          path: C:\Users\circleci\project\src\TestResults\result.xml
       - run:
           name: "Print Working Directory"
           command: pwd
