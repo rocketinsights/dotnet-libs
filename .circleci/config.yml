@@ -74,7 +74,7 @@ jobs:
           command: dotnet.exe pack ./src/RocketInsights.sln --output C:\Users\circleci\project\Packages --configuration Release
       - run:
           name: "Publishing"
-          command: Write-Host "Not Implemented" + $env:AWS_ACCESS_KEY_ID + " " + $env:AWS_SECRET_ACCESS_KEY
+          command: Write-Host ("Key: " + $env:AWS_ACCESS_KEY_ID + ", Secret: " + $env:AWS_SECRET_ACCESS_KEY)
 
 workflows:
   test_and_build:
