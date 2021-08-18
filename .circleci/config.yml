@@ -31,7 +31,7 @@ jobs:
       - store_artifacts:
           path: C:\Users\circleci\project\TestResults
   build:
-    description: Build application with Release configuration
+    description: Build, Pack, and Publish packages
     working_directory: ~/project
     executor:
       name: windows/default
@@ -41,8 +41,11 @@ jobs:
           name: "Versioning"
           command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj $env:CIRCLE_BUILD_NUM
       - run:
-          name: "Build Application according to some given configuration"
-          command: dotnet.exe pack ./src/RocketInsights.sln --configuration Release
+          name: "Packing"
+          command: dotnet.exe pack ./src/RocketInsights.sln --output C:\Users\circleci\project\Packages --configuration Release
+      - run:
+          name: "Publishing"
+          command: Write-Host "Not Implemented"
 
 workflows:
   test_and_build:
