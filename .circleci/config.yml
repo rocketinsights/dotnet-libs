@@ -13,9 +13,6 @@ jobs:
       name: windows/default
     steps:
       - checkout
-      - run:
-          name: "Information"
-          command: pwd
       - restore_cache:
           keys:
             - dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
@@ -30,10 +27,7 @@ jobs:
           name: "Run Application Tests"
           command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../TestResults/result.xml" --results-directory:test_coverage --collect:"XPlat Code Coverage"
       - store_test_results:
-          path: C:\Users\circleci\project\src\TestResults\result.xml
-      - run:
-          name: "Print Working Directory"
-          command: pwd
+          path: C:\Users\circleci\project\src\TestResults
       - store_artifacts:
           path: C:\Users\circleci\project\test_coverage
   build:
