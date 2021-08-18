@@ -1,7 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>John Askew</Authors>
+    <Company>Rocket Insights (part of Dept)</Company>
+    <Product>RocketInsights</Product>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
   </PropertyGroup>
-
 </Project>

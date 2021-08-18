@@ -13,6 +13,9 @@ jobs:
       name: windows/default
     steps:
       - checkout
+      - run:
+          name: "Versioning"
+          command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj ${CIRCLE_BUILD_NUM}
       - restore_cache:
           keys:
             - dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
