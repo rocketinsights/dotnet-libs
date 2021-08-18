@@ -78,9 +78,9 @@ jobs:
 
 workflows:
   test_and_build:
-    context: team-dotnet
     jobs:
       - test
       - build:
+          context: team-dotnet
           requires:
             - test
