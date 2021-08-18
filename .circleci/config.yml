@@ -29,12 +29,8 @@ commands:
                     ";c:\Program Files\Amazon\AWSCLIV2", "Machine")
                 name: Add AWSCLIV2 to PATH (powershell.exe)
                 shell: powershell.exe
-
-jobs:
   setup:
     description: Checkout code, initialize executor, and prepare solution
-    executor:
-      name: windows/default
     steps:
       - checkout
       - install-aws-cli
@@ -51,11 +47,14 @@ jobs:
           paths:
             - C:\Users\circleci\.nuget\packages
           key: dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
+
+jobs:
   test:
     description: Setup and run unit tests
     executor:
       name: windows/default
     steps:
+      - setup
       - run:
           name: "Run Application Tests"
           command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../../TestResults/result.xml" --results-directory:TestResults --collect:"XPlat Code Coverage"
@@ -68,6 +67,7 @@ jobs:
     executor:
       name: windows/default
     steps:
+      - setup
       - run:
           name: "Packing"
           command: dotnet.exe pack ./src/RocketInsights.sln --output C:\Users\circleci\project\Packages --configuration Release
@@ -80,14 +80,9 @@ jobs:
 workflows:
   default:
     jobs:
-      - setup:
-          context: team-dotnet
       - test:
           context: team-dotnet
-          requires:
-            - setup
       - build:
           context: team-dotnet
           requires:
-            - setup
             - test
