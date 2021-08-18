@@ -25,11 +25,11 @@ jobs:
           key: dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
       - run:
           name: "Run Application Tests"
-          command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../TestResults/result.xml" --results-directory:test_coverage --collect:"XPlat Code Coverage"
+          command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../../TestResults/result.xml" --results-directory:TestResults --collect:"XPlat Code Coverage"
       - store_test_results:
-          path: C:\Users\circleci\project\src\TestResults
+          path: C:\Users\circleci\project\TestResults
       - store_artifacts:
-          path: C:\Users\circleci\project\test_coverage
+          path: C:\Users\circleci\project\TestResults
   build:
     description: Build application with Release configuration
     working_directory: ~/project
