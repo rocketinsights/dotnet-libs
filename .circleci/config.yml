@@ -10,7 +10,9 @@ commands:
         description: Download and AWSCLIV2. Supports windows/amd64.
         steps:
             - run:
-                command: curl -LO https://awscli.amazonaws.com/AWSCLIV2.msi
+                command: |
+                    $WebClient = New-Object System.Net.WebClient
+                    $WebClient.DownloadFile("https://awscli.amazonaws.com/AWSCLIV2.msi","C:\Users\circleci\project\AWSCLIV2.msi")
                 name: Download AWSCLIV2
             - run:
                 command: msiexec.exe /i AWSCLIV2.msi /quiet
