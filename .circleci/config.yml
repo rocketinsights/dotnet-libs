@@ -45,7 +45,7 @@ jobs:
       - checkout
       - run:
           name: "Build Application according to some given configuration"
-          command: dotnet.exe ./src/RocketInsights.sln build --configuration Release
+          command: dotnet.exe build ./src/RocketInsights.sln --configuration Release
 
 workflows:
   test_and_build:
