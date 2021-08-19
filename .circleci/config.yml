@@ -7,33 +7,32 @@ orbs:
 
 commands:
   install-aws-cli:
-        description: Download and AWSCLIV2. Supports windows/amd64.
-        steps:
-            - run:
-                command: |
-                    $WebClient = New-Object System.Net.WebClient
-                    $WebClient.DownloadFile("https://awscli.amazonaws.com/AWSCLIV2.msi","C:\Users\circleci\project\AWSCLIV2.msi")
-                name: Download AWSCLIV2
-            - run:
-                command: msiexec.exe /i AWSCLIV2.msi /quiet
-                name: Install AWSCLIV2
-                shell: powershell.exe
-            - run:
-                command: |
-                    echo 'export PATH="/c/Program Files/Amazon/AWSCLIV2:$PATH"' >> $BASH_ENV
-                name: Add AWSCLIV2 to PATH (bash.exe)
-                shell: bash.exe
-            - run:
-                command: |
-                    [Environment]::SetEnvironmentVariable("Path", $env:PATH + `
-                    ";c:\Program Files\Amazon\AWSCLIV2", "Machine")
-                name: Add AWSCLIV2 to PATH (powershell.exe)
-                shell: powershell.exe
+    description: Download and AWSCLIV2. Supports windows/amd64.
+    steps:
+      - run:
+          command: |
+              $WebClient = New-Object System.Net.WebClient
+              $WebClient.DownloadFile("https://awscli.amazonaws.com/AWSCLIV2.msi","C:\Users\circleci\project\AWSCLIV2.msi")
+          name: Download AWSCLIV2
+      - run:
+          command: msiexec.exe /i AWSCLIV2.msi /quiet
+          name: Install AWSCLIV2
+          shell: powershell.exe
+      - run:
+          command: |
+              echo 'export PATH="/c/Program Files/Amazon/AWSCLIV2:$PATH"' >> $BASH_ENV
+          name: Add AWSCLIV2 to PATH (bash.exe)
+          shell: bash.exe
+      - run:
+          command: |
+              [Environment]::SetEnvironmentVariable("Path", $env:PATH + `
+              ";c:\Program Files\Amazon\AWSCLIV2", "Machine")
+          name: Add AWSCLIV2 to PATH (powershell.exe)
+          shell: powershell.exe
   setup:
     description: Checkout code, initialize executor, and prepare solution
     steps:
       - checkout
-      - install-aws-cli
       - run:
           name: "Versioning"
           command: ./tools/versioning.ps1 C:\Users\circleci\project\src\RocketInsights.Common\RocketInsights.Common.csproj $env:CIRCLE_BUILD_NUM
@@ -49,25 +48,16 @@ commands:
           key: dotnet-packages-v1-{{ checksum "./src/RocketInsights.sln" }}
 
 jobs:
-  test:
-    description: Setup and run unit tests
+  build-test-pack-push:
+    description: Build, Test, Pack, Push
     executor:
       name: windows/default
     steps:
       - setup
+      - install-aws-cli
       - run:
           name: "Run Application Tests"
           command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../../TestResults/result.xml" --results-directory:TestResults --collect:"XPlat Code Coverage"
-      - store_test_results:
-          path: C:\Users\circleci\project\TestResults
-      - store_artifacts:
-          path: C:\Users\circleci\project\TestResults
-  build:
-    description: Build, pack, and publish packages
-    executor:
-      name: windows/default
-    steps:
-      - setup
       - run:
           name: "Packing"
           command: dotnet.exe pack ./src/RocketInsights.sln --output C:\Users\circleci\project\Packages --configuration Release
@@ -76,13 +66,15 @@ jobs:
           command: |
               Write-Host $env:AWS_ACCESS_KEY_ID
               Write-Host $env:AWS_SECRET_ACCESS_KEY
+      - store_test_results:
+          path: C:\Users\circleci\project\TestResults
+          when: always
+      - store_artifacts:
+          path: C:\Users\circleci\project\TestResults
+          when: always
 
 workflows:
   default:
     jobs:
-      - test:
+      - build-test-pack-push:
           context: team-dotnet
-      - build:
-          context: team-dotnet
-          requires:
-            - test
