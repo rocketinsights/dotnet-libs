@@ -64,8 +64,8 @@ jobs:
       - run:
           name: "Publishing"
           command: |
-              Write-Host $env:AWS_ACCESS_KEY_ID
-              Write-Host $env:AWS_SECRET_ACCESS_KEY
+              aws codeartifact login --tool dotnet --repository dotnet-internal-nuget --domain rocketinsights-dotnet --domain-owner 600012347670
+              dotnet nuget push "C:\Users\circleci\project\Packages\*.nupkg" --source rocketinsights-dotnet/dotnet-internal-nuget
       - store_test_results:
           path: C:\Users\circleci\project\TestResults
           when: always
