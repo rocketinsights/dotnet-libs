@@ -30,12 +30,20 @@ commands:
           name: Add AWSCLIV2 to PATH (powershell.exe)
           shell: powershell.exe
       - run:
-          command: |
-              aws cli set aws_access_key_id $env:AWS_ACCESS_KEY_ID
-              aws cli set aws_secret_access_key $env:AWS_SECRET_ACCESS_KEY
-              aws cli set region us-east-1
-              aws --version
-          name: Configure defaults and confirm version
+          command: aws cli set aws_access_key_id $env:AWS_ACCESS_KEY_ID
+          name: "Configure access key id"
+          shell: powershell.exe
+      - run:
+          command: aws cli set aws_secret_access_key $env:AWS_SECRET_ACCESS_KEY
+          name: Configure secret access key
+          shell: powershell.exe
+      - run:
+          command: aws cli set region us-east-1
+          name: Configure region
+          shell: powershell.exe
+      - run:
+          command: aws --version
+          name: Confirm version
           shell: powershell.exe
   setup:
     description: Checkout code, initialize executor, and prepare solution
