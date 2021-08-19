@@ -10,6 +10,10 @@ commands:
     description: Download and AWSCLIV2. Supports windows/amd64.
     steps:
       - run:
+          command: Remove-MSIApplications -Name "AWS Command Line Interface"
+          name: Remove older version of AWS Command Line Interface (V1)
+          shell: powershell.exe
+      - run:
           command: |
               $WebClient = New-Object System.Net.WebClient
               $WebClient.DownloadFile("https://awscli.amazonaws.com/AWSCLIV2.msi","C:\Users\circleci\project\AWSCLIV2.msi")
