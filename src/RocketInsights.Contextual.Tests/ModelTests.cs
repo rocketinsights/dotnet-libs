@@ -24,7 +24,7 @@ namespace RocketInsights.Contextual.Tests
             var context = factory.Create();
 
             Assert.AreEqual("en-US", context.Culture.Name);
-            Assert.IsTrue(context.Identity.IsAuthenticated);
+            Assert.IsFalse(context.Identity.IsAuthenticated);
         }
     }
 }

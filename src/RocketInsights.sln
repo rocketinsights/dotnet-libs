@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30711.63
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketInsights.Common", "RocketInsights.Common\RocketInsights.Common.csproj", "{2AC2450A-1B09-4244-BE01-42AD6A4410F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketInsights.Common.Tests", "RocketInsights.Tests\RocketInsights.Common.Tests.csproj", "{9023D8D3-AACB-46B2-872C-D5BCE9ED2413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketInsights.Common.Tests", "RocketInsights.Common.Tests\RocketInsights.Common.Tests.csproj", "{9023D8D3-AACB-46B2-872C-D5BCE9ED2413}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocketInsights.Contextual", "RocketInsights.Contextual\RocketInsights.Contextual.csproj", "{75EB694B-7008-4B7E-ADD6-4984CB375373}"
 EndProject
