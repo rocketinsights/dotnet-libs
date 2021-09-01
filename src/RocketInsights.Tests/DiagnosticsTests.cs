@@ -5,7 +5,7 @@ using RocketInsights.Common.Diagnostics;
 using System.Threading;
 using System;
 
-namespace RocketInsights.Tests
+namespace RocketInsights.Common.Tests
 {
     [TestClass]
     public class DiagnosticsTests

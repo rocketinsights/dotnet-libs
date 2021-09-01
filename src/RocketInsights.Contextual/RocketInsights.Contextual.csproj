@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>John Askew</Authors>
+    <Product>RocketInsights</Product>
+    <Company>Rocket Insights (part of Dept)</Company>
   </PropertyGroup>
 
   <ItemGroup>
