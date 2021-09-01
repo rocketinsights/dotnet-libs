@@ -13,9 +13,11 @@ namespace RocketInsights.Contextual.Tests
         [TestMethod]
         public void FactoryCreateContext()
         {
-            // Test will fail until these mocks are setup properly
             var mockCultureFactory = new Mock<IFactory<CultureInfo>>();
+            mockCultureFactory.Setup(f => f.Create()).Returns(new CultureInfo("en-US"));
+
             var mockIdentityFactory = new Mock<IFactory<ClaimsIdentity>>();
+            mockIdentityFactory.Setup(f => f.Create()).Returns(new ClaimsIdentity());
 
             var factory = new ContextFactory(mockCultureFactory.Object, mockIdentityFactory.Object);
 
