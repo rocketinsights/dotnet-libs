@@ -79,7 +79,7 @@ jobs:
       - install-aws-cli
       - run:
           name: "Run Application Tests"
-          command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit;LogFilePath=../../TestResults/result.xml" --results-directory:TestResults --collect:"XPlat Code Coverage"
+          command: dotnet.exe test ./src/RocketInsights.sln -v n --logger:"junit" --collect:"XPlat Code Coverage"
       - run:
           name: "Packing"
           command: dotnet.exe pack ./src/RocketInsights.sln --output C:\Users\circleci\project\Packages --configuration Release
@@ -88,11 +88,17 @@ jobs:
           command: |
               aws codeartifact login --tool dotnet --repository dotnet-internal-nuget --domain rocketinsights-dotnet --domain-owner 600012347670
               dotnet nuget push "C:\Users\circleci\project\Packages\*.nupkg" --source rocketinsights-dotnet/dotnet-internal-nuget
+      - run:
+          name: "Consolidate Results"
+          command: |
+              ./tools/testresults.ps1 "C:\Users\circleci\project\src\" "C:\Users\circleci\project\TestResults\"
+              ./tools/coverageresults.ps1 "C:\Users\circleci\project\src\" "C:\Users\circleci\project\Artifacts\"
+          when: always
       - store_test_results:
           path: C:\Users\circleci\project\TestResults
           when: always
       - store_artifacts:
-          path: C:\Users\circleci\project\TestResults
+          path: C:\Users\circleci\project\Artifacts
           when: always
 
 workflows:
