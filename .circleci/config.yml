@@ -8,5 +8,5 @@ orbs:
 workflows:
   default:
     jobs:
-      - dotnet\build-test-pack-push:
+      - dotnet/build-test-pack-push:
           context: team-dotnet
