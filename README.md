@@ -37,7 +37,7 @@ When you resolve a dependency for `ProfilerManager`, you can use the `Instantiat
 
         public void SomeMethod()
         {
-            using(var profiler = Manager.Instantiate())
+            using(var profiler = Manager.Instantiate("Profiler for Thread.Sleep(1000)"))
             {
                 Thread.Sleep(1000);
             }
