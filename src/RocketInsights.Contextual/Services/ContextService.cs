@@ -1,7 +1,5 @@
 ﻿using RocketInsights.Common.Patterns;
 using RocketInsights.Contextual.Models;
-using System.Globalization;
-using System.Security.Claims;
 
 namespace RocketInsights.Contextual.Services
 {
