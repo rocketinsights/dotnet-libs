@@ -2,8 +2,8 @@
 
 namespace RocketInsights.Common.Patterns.Pipelines
 {
-    public interface IOperation<T>
+    public interface IOperation<TInput, TOutput>
     {
-        Task<T> InvokeAsync(T input);
+        Task<TOutput> InvokeAsync(TInput input);
     }
 }

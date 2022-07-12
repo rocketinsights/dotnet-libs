@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RocketInsights.Common.Patterns.Pipelines;
 using System;
 using System.Collections.Generic;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RocketInsights.Common.Tests
 {
-    public class ConcatenationOperation : IOperation<string>
+    public class ConcatenationOperation : IChainableOperation<string>
     {
         public Task<string> InvokeAsync(string input)
         {
@@ -18,9 +20,9 @@ namespace RocketInsights.Common.Tests
 
     public class ConditionalConcatenationOperation : ConditionalOperation<string>
     {
-        protected override Func<string, bool> Predicate => (input) => input.Length < 12;
+        protected override Func<string, bool> Condition => (input) => input.Length < 12;
 
-        protected override Task<string> ConditionalInvoke(string input)
+        protected override Task<string> ConditionalInvokeAsync(string input)
         {
             var output = string.Concat(input, input);
 
@@ -28,9 +30,19 @@ namespace RocketInsights.Common.Tests
         }
     }
 
+    public class ToAscii : IOperation<char, int>
+    {
+        public Task<int> InvokeAsync(char input)
+        {
+            return Task.FromResult((int)input);
+        }
+    }
+
     [TestClass]
     public class PatternTests
     {
+        private static IServiceCollection ServiceCollection => new ServiceCollection().AddLogging(logging => logging.SetMinimumLevel(LogLevel.Trace).AddDebug());
+
         public PatternTests()
         {
 
@@ -39,12 +51,12 @@ namespace RocketInsights.Common.Tests
         [TestMethod]
         public async Task TestSimplePipeline()
         {
-            var stages = new List<IOperation<string>>() { new ConcatenationOperation(), new ConcatenationOperation(), new ConcatenationOperation() };
+            var stages = new List<IChainableOperation<string>>() { new ConcatenationOperation(), new ConcatenationOperation(), new ConcatenationOperation() };
 
             var pipeline = new AggregatePipeline<string>(stages);
 
-            var result1 = await pipeline.RunAsync("a");
-            var result2 = await pipeline.RunAsync("ab");
+            var result1 = await pipeline.InvokeAsync("a");
+            var result2 = await pipeline.InvokeAsync("ab");
 
             Assert.AreEqual("aaaaaaaa", result1);
             Assert.AreEqual("abababababababab", result2);
@@ -53,12 +65,12 @@ namespace RocketInsights.Common.Tests
         [TestMethod]
         public async Task TestPipelineWithConditionalOperation()
         {
-            var stages = new List<IOperation<string>>() { new ConditionalConcatenationOperation(), new ConditionalConcatenationOperation(), new ConditionalConcatenationOperation() };
+            var stages = new List<IChainableOperation<string>>() { new ConditionalConcatenationOperation(), new ConditionalConcatenationOperation(), new ConditionalConcatenationOperation() };
 
             var pipeline = new AggregatePipeline<string>(stages);
 
-            var result1 = await pipeline.RunAsync("ab");
-            var result2 = await pipeline.RunAsync("abc");
+            var result1 = await pipeline.InvokeAsync("ab");
+            var result2 = await pipeline.InvokeAsync("abc");
 
             Assert.AreEqual("abababababababab", result1);
             Assert.AreEqual("abcabcabcabc", result2); // The third operation is not invoked because the predicate evaluates as false

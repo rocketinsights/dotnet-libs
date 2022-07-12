@@ -3,20 +3,20 @@ using System.Threading.Tasks;
 
 namespace RocketInsights.Common.Patterns.Pipelines
 {
-    public class AggregatePipeline<T> : IPipeline<T>
+    public class AggregatePipeline<T> : IChainableOperation<T>
     {
-        public IEnumerable<IOperation<T>> Stages { get; }
+        public IEnumerable<IChainableOperation<T>> Operations { get; }
 
-        public AggregatePipeline(IEnumerable<IOperation<T>> operations)
+        public AggregatePipeline(IEnumerable<IChainableOperation<T>> operations)
         {
-            Stages = operations;
+            Operations = operations;
         }
 
-        public async Task<T> RunAsync(T input)
+        public async Task<T> InvokeAsync(T input)
         {
-            foreach(var stage in Stages)
+            foreach(var operation in Operations)
             {
-                input = await stage.InvokeAsync(input);
+                input = await operation.InvokeAsync(input);
             }
 
             return input;
