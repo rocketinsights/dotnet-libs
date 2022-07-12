@@ -1,4 +1,6 @@
-﻿namespace RocketInsights.DXP.Models
+﻿using System;
+
+namespace RocketInsights.DXP.Models
 {
     public class ModelBase
     {

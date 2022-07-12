@@ -2,6 +2,7 @@
 using RocketInsights.Contextual.Models;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Services;
+using System.Threading.Tasks;
 
 namespace RocketInsights.DXP.AspNetCore
 {
@@ -25,7 +26,7 @@ namespace RocketInsights.DXP.AspNetCore
                 // You could do stuff with this if needed
             }
 
-            return await LayoutService.GetComposition();
+            return await LayoutService.GetCompositionAsync();
         }
     }
 }
