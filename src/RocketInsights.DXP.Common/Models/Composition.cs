@@ -1,4 +1,6 @@
-﻿namespace RocketInsights.DXP.Models
+﻿using System.Collections.Generic;
+
+namespace RocketInsights.DXP.Models
 {
     public class Composition : TemplatedModelBase
     {

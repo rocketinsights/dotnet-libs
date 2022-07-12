@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>John Askew</Authors>
-    <Company>Rocket Insights (part of Dept)John Askew</Company>
+    <Company>Rocket Insights (part of Dept)</Company>
     <Product>RocketInsights</Product>
     <Version>5.0.0</Version>
   </PropertyGroup>
