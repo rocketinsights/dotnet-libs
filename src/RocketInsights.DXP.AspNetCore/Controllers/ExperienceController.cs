@@ -1,14 +1,14 @@
-﻿using RocketInsights.Contextual;
-using RocketInsights.Contextual.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using RocketInsights.Contextual;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Services;
 using System.Threading.Tasks;
-using System.Web.Mvc;
 
-namespace RocketInsights.DXP.AspNetCore
+namespace RocketInsights.DXP.AspNetCore.Controllers
 {
-    [RoutePrefix("experience")]
-    public class ExperienceController : Controller
+    [Route("experience")]
+    [ApiController]
+    public class ExperienceController : ControllerBase
     {
         protected IContextStore ContextStore { get; }
         protected ILayoutService LayoutService { get; }
@@ -21,13 +21,13 @@ namespace RocketInsights.DXP.AspNetCore
             ContentService = contentService;
         }
 
-        [HttpGet, Route("composition")]
+        [HttpGet("composition")]
         public async Task<Composition> GetComposition()
         {
             return await LayoutService.GetCompositionAsync();
         }
 
-        [HttpGet, Route("Fragment/{id}")]
+        [HttpGet("fragment/{id}")]
         public async Task<Fragment> GetFragment(string id)
         {
             return await ContentService.GetFragmentAsync(id);
