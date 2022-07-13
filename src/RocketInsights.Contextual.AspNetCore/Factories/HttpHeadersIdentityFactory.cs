@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using RocketInsights.Common.Patterns;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace RocketInsights.Contextual.AspNetCore.Factories
 {
@@ -13,16 +14,12 @@ namespace RocketInsights.Contextual.AspNetCore.Factories
             Accessor = accessor;
         }
 
-        public ClaimsIdentity Create()
+        public Task<ClaimsIdentity> Create()
         {
             var identity = Accessor.HttpContext.User.Identity;
+            var claimsIdentity = identity.IsAuthenticated ? new ClaimsIdentity(identity) : new ClaimsIdentity();
 
-            if (identity.IsAuthenticated)
-            {
-                return new ClaimsIdentity(identity);
-            }
-
-            return new ClaimsIdentity();
+            return Task.FromResult(claimsIdentity);
         }
     }
 }

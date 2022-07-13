@@ -4,7 +4,7 @@ namespace RocketInsights.DXP.Models
 {
     public class Composition : TemplatedModelBase
     {
-        public IEnumerable<Region> Regions = new List<Region>();
+        public IEnumerable<Region> Regions { get; set; } = new List<Region>();
 
     }
 }

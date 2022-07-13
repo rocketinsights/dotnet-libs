@@ -1,7 +1,9 @@
-﻿namespace RocketInsights.Common.Patterns
+﻿using System.Threading.Tasks;
+
+namespace RocketInsights.Common.Patterns
 {
     public interface IFactory<T>
     {
-        T Create();
+        Task<T> Create();
     }
 }

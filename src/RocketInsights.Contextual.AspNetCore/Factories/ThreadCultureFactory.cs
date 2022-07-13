@@ -1,14 +1,15 @@
 ﻿using RocketInsights.Common.Patterns;
 using System.Globalization;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RocketInsights.Contextual.AspNetCore.Factories
 {
     public class ThreadCultureFactory : IFactory<CultureInfo>
     {
-        public CultureInfo Create()
+        public Task<CultureInfo> Create()
         {
-            return Thread.CurrentThread.CurrentCulture;
+            return Task.FromResult(Thread.CurrentThread.CurrentCulture);
         }
     }
 }

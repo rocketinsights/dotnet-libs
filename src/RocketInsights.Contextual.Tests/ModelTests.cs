@@ -4,6 +4,7 @@ using RocketInsights.Common.Patterns;
 using RocketInsights.Contextual.Factories;
 using System.Globalization;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace RocketInsights.Contextual.Tests
 {
@@ -11,17 +12,17 @@ namespace RocketInsights.Contextual.Tests
     public class ModelTests
     {
         [TestMethod]
-        public void FactoryCreateContext()
+        public async Task FactoryCreateContext()
         {
             var mockCultureFactory = new Mock<IFactory<CultureInfo>>();
-            mockCultureFactory.Setup(f => f.Create()).Returns(new CultureInfo("en-US"));
+            mockCultureFactory.Setup(f => f.Create()).Returns(Task.FromResult(new CultureInfo("en-US")));
 
             var mockIdentityFactory = new Mock<IFactory<ClaimsIdentity>>();
-            mockIdentityFactory.Setup(f => f.Create()).Returns(new ClaimsIdentity());
+            mockIdentityFactory.Setup(f => f.Create()).Returns(Task.FromResult(new ClaimsIdentity()));
 
             var factory = new ContextFactory(mockCultureFactory.Object, mockIdentityFactory.Object);
 
-            var context = factory.Create();
+            var context = await factory.Create();
 
             Assert.AreEqual("en-US", context.Culture.Name);
             Assert.IsFalse(context.Identity.IsAuthenticated);

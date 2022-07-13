@@ -2,6 +2,7 @@
 using RocketInsights.Contextual.Models;
 using System.Globalization;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace RocketInsights.Contextual.Factories
 {
@@ -16,12 +17,12 @@ namespace RocketInsights.Contextual.Factories
             IdentityFactory = identityFactory;
         }
 
-        public Context Create()
+        public async Task<Context> Create()
         {
             var context = new Context
             {
-                Culture = CultureFactory.Create(),
-                Identity = IdentityFactory.Create()
+                Culture = await CultureFactory.Create(),
+                Identity = await IdentityFactory.Create()
             };
 
             return context;
