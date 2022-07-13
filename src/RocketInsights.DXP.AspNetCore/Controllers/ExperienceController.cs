@@ -10,27 +10,23 @@ namespace RocketInsights.DXP.AspNetCore.Controllers
     [ApiController]
     public class ExperienceController : ControllerBase
     {
-        protected IContextStore ContextStore { get; }
-        protected ILayoutService LayoutService { get; }
-        protected IContentService ContentService { get; }
+        protected IExperienceService ExperienceService { get; }
 
-        public ExperienceController(IContextStore contextStore, ILayoutService layoutService, IContentService contentService)
+        public ExperienceController(IExperienceService experienceService)
         {
-            ContextStore = contextStore;
-            LayoutService = layoutService;
-            ContentService = contentService;
+            ExperienceService = experienceService;
         }
 
         [HttpGet("composition")]
         public async Task<Composition> GetComposition()
         {
-            return await LayoutService.GetCompositionAsync();
+            return await ExperienceService.GetCompositionAsync();
         }
 
         [HttpGet("fragment/{id}")]
         public async Task<Fragment> GetFragment(string id)
         {
-            return await ContentService.GetFragmentAsync(id);
+            return await ExperienceService.GetFragmentAsync(id);
         }
     }
 }
