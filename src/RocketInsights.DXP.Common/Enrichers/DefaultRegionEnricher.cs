@@ -1,4 +1,5 @@
-﻿using RocketInsights.Common.Patterns.Pipelines;
+﻿using Microsoft.Extensions.DependencyInjection;
+using RocketInsights.Common.Patterns.Pipelines;
 using RocketInsights.DXP.Models;
 using System;
 using System.Collections.Generic;
@@ -8,13 +9,11 @@ namespace RocketInsights.DXP.Enrichers
 {
     public class DefaultRegionEnricher : IChainableOperation<Region>
     {
-        protected IEnumerable<IChainableOperation<Region>> RegionEnrichers { get; }
-        protected IEnumerable<IChainableOperation<Fragment>> FragmentEnrichers { get; }
+        private IServiceProvider ServiceProvider { get; }
 
-        public DefaultRegionEnricher(IEnumerable<IChainableOperation<Region>> regionEnrichers, IEnumerable<IChainableOperation<Fragment>> fragmentEnrichers)
+        public DefaultRegionEnricher(IServiceProvider serviceProvider)
         {
-            RegionEnrichers = regionEnrichers;
-            FragmentEnrichers = fragmentEnrichers;
+            ServiceProvider = serviceProvider;
         }
 
         public async Task<Region> InvokeAsync(Region input)
@@ -33,7 +32,7 @@ namespace RocketInsights.DXP.Enrichers
             {
                 var region = r;
 
-                foreach (var enricher in RegionEnrichers)
+                foreach (var enricher in ServiceProvider.GetServices<IChainableOperation<Region>>())
                 {
                     try
                     {
@@ -59,7 +58,7 @@ namespace RocketInsights.DXP.Enrichers
             {
                 var fragment = f;
 
-                foreach (var enricher in FragmentEnrichers)
+                foreach (var enricher in ServiceProvider.GetServices<IChainableOperation<Fragment>>())
                 {
                     try
                     {
