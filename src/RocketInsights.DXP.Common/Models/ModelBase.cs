@@ -4,7 +4,8 @@ namespace RocketInsights.DXP.Models
 {
     public class ModelBase
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Id { get; set; } = string.Empty;
+        public Guid Guid { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = string.Empty;
         public Content Content { get; set; } = new Content();
     }
