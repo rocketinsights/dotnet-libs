@@ -33,7 +33,7 @@ namespace RocketInsights.DXP.Providers.Kontent
         public Task<Fragment> GetFragmentAsync(string id)
         {
             if (!ContextService.TryGetContext(out var context))
-            {
+            { 
                 throw new Exception("Unable to retrieve a context");
             }
 
