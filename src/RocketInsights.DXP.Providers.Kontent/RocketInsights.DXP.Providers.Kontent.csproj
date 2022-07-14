@@ -9,6 +9,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\RocketInsights.Contextual\RocketInsights.Contextual.csproj" />
 		<ProjectReference Include="..\RocketInsights.DXP.Common\RocketInsights.DXP.csproj" />
 	</ItemGroup>
 
