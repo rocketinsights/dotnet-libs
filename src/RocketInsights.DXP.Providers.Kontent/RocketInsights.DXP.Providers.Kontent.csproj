@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Authors>John Askew</Authors>
+		<Company>Rocket Insights (part of Dept)</Company>
+		<Product>RocketInsights</Product>
+		<Version>0.1.0</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\RocketInsights.DXP.Common\RocketInsights.DXP.csproj" />
+	</ItemGroup>
+
+</Project>
