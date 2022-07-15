@@ -34,13 +34,29 @@ namespace RocketInsights.DXP.Providers.Kontent
         {
             if (!ContextService.TryGetContext(out var context))
             {
+                // projectId
+                // language
+                // id
+
+                // https://kontent.ai/api/{projectId}/content-by-id/{id}
+
+
                 throw new Exception("Unable to retrieve a context");
             }
 
+            var content = new Content();
+
+            
+
             var fragment = new Fragment()
             {
-                Id = id,
-                Name = $"This came from a Kontent provider ({context.Culture.DisplayName})."
+                Id = "item.system.codename",
+                Name = $"This came from a Kontent provider ({context.Culture.DisplayName}).",
+                Template = new Template()
+                {
+                    Name = "item.system.type"
+                },
+                Content = content
             };
 
             return Task.FromResult(fragment);

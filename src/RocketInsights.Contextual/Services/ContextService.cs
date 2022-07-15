@@ -1,5 +1,6 @@
 ﻿using RocketInsights.Common.Patterns;
 using RocketInsights.Contextual.Models;
+using System.Threading.Tasks;
 
 namespace RocketInsights.Contextual.Services
 {
@@ -14,9 +15,9 @@ namespace RocketInsights.Contextual.Services
             ContextFactory = contextFactory;
         }
 
-        public void GenerateAndSetContext()
+        public async Task GenerateAndSetContext()
         {
-            var context = ContextFactory.Create();
+            var context = await ContextFactory.Create();
 
             Store.Set("context", context);
         }
