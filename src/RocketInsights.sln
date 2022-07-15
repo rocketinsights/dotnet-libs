@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31912.275
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32602.291
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketInsights.Common", "RocketInsights.Common\RocketInsights.Common.csproj", "{2AC2450A-1B09-4244-BE01-42AD6A4410F4}"
 EndProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{04D598
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketInsights.DXP.AspNetCore", "RocketInsights.DXP.AspNetCore\RocketInsights.DXP.AspNetCore.csproj", "{19CC8707-2540-4CFB-9265-D9D774300906}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocketInsights.DXP.Providers.Kontent", "RocketInsights.DXP.Providers.Kontent\RocketInsights.DXP.Providers.Kontent.csproj", "{CB498A41-AB48-40E1-9E59-D25F4FA35305}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocketInsights.DXP.Providers.Kontent", "RocketInsights.DXP.Providers.Kontent\RocketInsights.DXP.Providers.Kontent.csproj", "{CB498A41-AB48-40E1-9E59-D25F4FA35305}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RocketInsights.DXP.Providers.Kontent.Tests", "RocketInsights.DXP.Providers.Kontent.Tests\RocketInsights.DXP.Providers.Kontent.Tests.csproj", "{3FB84C80-6D85-4307-BC03-B83304F86400}"
 EndProject

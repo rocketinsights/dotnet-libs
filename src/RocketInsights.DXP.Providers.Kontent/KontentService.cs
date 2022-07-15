@@ -1,7 +1,10 @@
-﻿using RocketInsights.Contextual.Services;
+﻿using RestSharp;
+using RocketInsights.Contextual.Services;
 using RocketInsights.DXP.Models;
+using RocketInsights.DXP.Providers.Kontent.ApiRunnerEngine;
 using RocketInsights.DXP.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace RocketInsights.DXP.Providers.Kontent
@@ -10,9 +13,12 @@ namespace RocketInsights.DXP.Providers.Kontent
     {
         private IContextService ContextService { get; }
 
-        public KontentService(IContextService contextService)
+        private IRestRunner RestRunner { get; set; }
+
+        public KontentService(IContextService contextService, IRestRunner restRunner)
         {
             ContextService = contextService;
+            RestRunner = restRunner;
         }
 
         public Task<Composition> GetCompositionAsync()
@@ -30,23 +36,21 @@ namespace RocketInsights.DXP.Providers.Kontent
             return Task.FromResult(composition);
         }
 
-        public Task<Fragment> GetFragmentAsync(string id)
+        public async Task<Fragment> GetFragmentAsync(string id)
         {
             if (!ContextService.TryGetContext(out var context))
-            {
-                // projectId
-                // language
-                // id
-
-                // https://kontent.ai/api/{projectId}/content-by-id/{id}
-
-
+            { 
                 throw new Exception("Unable to retrieve a context");
             }
 
-            var content = new Content();
-
-            
+            var response = await RestRunner.Execute(
+                new RestRequestProperties
+                {
+                    BaseUrl = new Uri("https://deliver.kontent.ai/a67bb8d5-9520-00f7-8e76-952d8123356e"),
+                    Resource = "items/{codename}",
+                    UrlSegments = new List<UrlSegment> { new UrlSegment("codename", "title_test") },
+                    Method = Method.Get
+                }).ConfigureAwait(false);
 
             var fragment = new Fragment()
             {
@@ -59,7 +63,7 @@ namespace RocketInsights.DXP.Providers.Kontent
                 Content = content
             };
 
-            return Task.FromResult(fragment);
+            return await Task.FromResult(fragment);
         }
     }
 }

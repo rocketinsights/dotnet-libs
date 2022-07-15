@@ -1,12 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>netstandard2.1</TargetFramework>
 		<Authors>John Askew</Authors>
 		<Company>Rocket Insights (part of Dept)</Company>
 		<Product>RocketInsights</Product>
+		<nullable>enable</nullable>
 		<Version>0.1.0</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="RestSharp" Version="108.0.1" />
+	  <PackageReference Include="System.Text.Json" Version="6.0.5" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\RocketInsights.Contextual\RocketInsights.Contextual.csproj" />
