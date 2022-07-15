@@ -59,8 +59,7 @@ namespace RocketInsights.DXP.Providers.Kontent
                 Template = new Template()
                 {
                     Name = "item.system.type"
-                },
-                Content = content
+                }
             };
 
             return await Task.FromResult(fragment);
