@@ -48,7 +48,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
 
             var fragment = await experienceService.GetFragmentAsync("title_test");
 
-            Assert.AreEqual("To be confirmed", fragment.Name);
+            Assert.AreEqual("This came from a Kontent provider (English (United States)).", fragment.Name);
         }
     }
 }
