@@ -11,8 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddSingleton<ILayoutService, KontentService>();
             services.AddSingleton<IContentService, KontentService>();
-
-            services.AddScoped<IRestRunner, RestRunner>().AddScoped(x => new Lazy<IRestRunner>(x.GetRequiredService<IRestRunner>));
+            services.AddSingleton<IRestRunner, RestRunner>();
 
             return services;
         }
