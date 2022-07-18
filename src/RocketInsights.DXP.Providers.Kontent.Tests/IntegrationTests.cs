@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RocketInsights.Contextual;
 using RocketInsights.Contextual.Models;
-using RocketInsights.Contextual.Services;
 using RocketInsights.DXP.Services;
 using System.Globalization;
 using System.Security.Claims;
@@ -46,9 +45,9 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 
             var experienceService = provider.GetRequiredService<IExperienceService>();
 
-            var fragment = await experienceService.GetFragmentAsync("title_test");
+            var fragment = await experienceService.GetFragmentAsync("a67bb8d5-9520-00f7-8e76-952d8123356e", "title_test");
 
-            Assert.AreEqual("This came from a Kontent provider (English (United States)).", fragment.Name);
+            Assert.AreEqual("Untitled content item", fragment.Name);
         }
     }
 }

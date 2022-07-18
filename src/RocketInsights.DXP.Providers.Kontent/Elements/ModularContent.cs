@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace RocketInsights.DXP.Providers.Kontent.Elements
 {
-    public class SubpagesElement : ElementBase
+    public class ModularContent : ElementBase
     {
         [JsonPropertyName("value")]
         public List<string>? Value { get; set; }

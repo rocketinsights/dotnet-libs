@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RocketInsights.Contextual;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Services;
 using System.Threading.Tasks;
@@ -23,10 +22,10 @@ namespace RocketInsights.DXP.AspNetCore.Controllers
             return await ExperienceService.GetCompositionAsync();
         }
 
-        [HttpGet("fragment/{id}")]
-        public async Task<Fragment> GetFragment(string id)
+        [HttpGet("fragment/{id}/{codename}")]
+        public async Task<Fragment> GetFragment(string id, string codename)
         {
-            return await ExperienceService.GetFragmentAsync(id);
+            return await ExperienceService.GetFragmentAsync(id, codename);
         }
     }
 }
