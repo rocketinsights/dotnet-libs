@@ -37,7 +37,7 @@ namespace RocketInsights.DXP.Providers.Kontent
             return await Task.FromResult(composition);
         }
 
-        public async Task<Fragment> GetFragmentAsync(string id, string codename)
+        public async Task<Fragment> GetFragmentAsync(string id)
         {
             if (!ContextService.TryGetContext(out _))
                 throw new Exception("Unable to retrieve a context");
@@ -45,9 +45,9 @@ namespace RocketInsights.DXP.Providers.Kontent
             var response = await RestRunner.Execute(
                 new RestRequestProperties
                 {
-                    BaseUrl = new Uri(UrlHelpers.GetKontentBaseUrl(id)),
+                    BaseUrl = new Uri(UrlHelpers.GetKontentBaseUrl("a67bb8d5-9520-00f7-8e76-952d8123356e")),
                     Resource = "items/{codename}",
-                    UrlSegments = new List<UrlSegment> { new UrlSegment("codename", codename) },
+                    UrlSegments = new List<UrlSegment> { new UrlSegment("codename", id) },
                     Method = Method.Get
                 }).ConfigureAwait(false);
 

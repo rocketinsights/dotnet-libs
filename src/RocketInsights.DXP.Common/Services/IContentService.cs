@@ -6,6 +6,6 @@ namespace RocketInsights.DXP.Services
 {
     public interface IContentService
     {
-        Task<Fragment> GetFragmentAsync(string id, string codename);
+        Task<Fragment> GetFragmentAsync(string id);
     }
 }

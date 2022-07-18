@@ -43,11 +43,11 @@ namespace RocketInsights.DXP.Services
             return composition;
         }
 
-        public async Task<Fragment> GetFragmentAsync(string id, string codename)
+        public async Task<Fragment> GetFragmentAsync(string id)
         {
             var contentService = await ContentServiceFactory.Create();
 
-            var fragment = await contentService.GetFragmentAsync(id, codename);
+            var fragment = await contentService.GetFragmentAsync(id);
 
             foreach(var enricher in FragmentEnrichers)
             {

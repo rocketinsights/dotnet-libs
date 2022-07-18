@@ -22,10 +22,10 @@ namespace RocketInsights.DXP.AspNetCore.Controllers
             return await ExperienceService.GetCompositionAsync();
         }
 
-        [HttpGet("fragment/{id}/{codename}")]
-        public async Task<Fragment> GetFragment(string id, string codename)
+        [HttpGet("fragment/{id}")]
+        public async Task<Fragment> GetFragment(string id)
         {
-            return await ExperienceService.GetFragmentAsync(id, codename);
+            return await ExperienceService.GetFragmentAsync(id);
         }
     }
 }

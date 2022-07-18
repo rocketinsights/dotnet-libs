@@ -45,7 +45,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 
             var experienceService = provider.GetRequiredService<IExperienceService>();
 
-            var fragment = await experienceService.GetFragmentAsync("a67bb8d5-9520-00f7-8e76-952d8123356e", "title_test");
+            var fragment = await experienceService.GetFragmentAsync("title_test");
 
             Assert.AreEqual("Untitled content item", fragment.Name);
         }
