@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RocketInsights.Common.Models;
+using System;
 
 namespace RocketInsights.DXP.Models
 {

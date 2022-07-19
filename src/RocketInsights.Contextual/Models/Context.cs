@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using RocketInsights.Common.Models;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace RocketInsights.Contextual.Models
@@ -7,6 +8,6 @@ namespace RocketInsights.Contextual.Models
     {
         public CultureInfo Culture { get; set; }
         public ClaimsIdentity Identity { get; set; }
-        public RequestContext Request { get; set; }
+        public Content Content { get; set; }
     }
 }
