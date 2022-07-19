@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RocketInsights.DXP.Models
+namespace RocketInsights.Common.Models
 {
     public class Content : Dictionary<string, object>
     {

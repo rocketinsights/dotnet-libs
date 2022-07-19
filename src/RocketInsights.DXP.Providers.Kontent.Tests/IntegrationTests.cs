@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using RocketInsights.Common.Models;
 using RocketInsights.Contextual;
 using RocketInsights.Contextual.Models;
 using RocketInsights.DXP.Services;
@@ -40,7 +41,8 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
             contextStore.Set("context", new Context()
             {
                 Culture = new CultureInfo("en-US"),
-                Identity = new ClaimsIdentity()
+                Identity = new ClaimsIdentity(),
+                Content = new Content()
             });
                 
             var experienceService = provider.GetRequiredService<IExperienceService>();
