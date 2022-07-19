@@ -16,7 +16,7 @@ namespace RocketInsights.DXP.AspNetCore.Controllers
             ExperienceService = experienceService;
         }
 
-        [HttpGet("composition")]
+        [HttpPost("composition")]
         public async Task<Composition> GetComposition()
         {
             return await ExperienceService.GetCompositionAsync();
