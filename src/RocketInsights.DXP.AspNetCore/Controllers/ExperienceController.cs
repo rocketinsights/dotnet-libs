@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RocketInsights.Contextual;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Services;
 using System.Threading.Tasks;

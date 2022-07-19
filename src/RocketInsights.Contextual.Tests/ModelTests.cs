@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RocketInsights.Common.Patterns;
 using RocketInsights.Contextual.Factories;
+using RocketInsights.DXP.Services;
 using System.Globalization;
 using System.Security.Claims;
 using System.Threading.Tasks;

@@ -15,7 +15,8 @@ namespace RocketInsights.DXP.Services
         protected IEnumerable<IChainableOperation<Composition>> CompositionEnrichers { get; }
         protected IEnumerable<IChainableOperation<Fragment>> FragmentEnrichers { get; }
 
-        public DefaultExperienceService(IFactory<Composition> compositionFactory, IFactory<IContentService> contentServiceFactory, IEnumerable<IChainableOperation<Composition>> compositionEnrichers, IEnumerable<IChainableOperation<Fragment>> fragmentEnrichers)
+        public DefaultExperienceService(IFactory<Composition> compositionFactory, IFactory<IContentService> contentServiceFactory, 
+            IEnumerable<IChainableOperation<Composition>> compositionEnrichers, IEnumerable<IChainableOperation<Fragment>> fragmentEnrichers)
         {
             CompositionFactory = compositionFactory;
             ContentServiceFactory = contentServiceFactory;

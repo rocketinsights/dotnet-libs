@@ -15,7 +15,7 @@ namespace RocketInsights.Contextual.AspNetCore.Middleware
 
         public async Task InvokeAsync(HttpContext context, IContextService contextService)
         {
-            contextService.GenerateAndSetContext();
+            await contextService.GenerateAndSetContext();
 
             // Call the next delegate/middleware in the pipeline
             await _next(context);
