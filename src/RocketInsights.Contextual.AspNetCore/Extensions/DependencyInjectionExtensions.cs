@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using RocketInsights.Common.Models;
 using RocketInsights.Common.Patterns;
 using RocketInsights.Contextual;
 using RocketInsights.Contextual.AspNetCore;
@@ -21,6 +22,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IFactory<CultureInfo>, ThreadCultureFactory>();
             services.AddSingleton<IFactory<ClaimsIdentity>, HttpHeadersIdentityFactory>();
+            services.AddSingleton<IFactory<Content>, HttpBodyContentFactory>();
+
             services.AddSingleton<IFactory<Context>, ContextFactory>(); // The factories above should come from options instead of being fixed
             
             services.AddSingleton<IContextService, ContextService>();

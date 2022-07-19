@@ -1,4 +1,5 @@
 ﻿using RestSharp;
+using RocketInsights.Common.Models;
 using RocketInsights.Contextual.Services;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Providers.Kontent.ApiRunnerEngine;
