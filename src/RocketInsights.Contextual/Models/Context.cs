@@ -7,5 +7,6 @@ namespace RocketInsights.Contextual.Models
     {
         public CultureInfo Culture { get; set; }
         public ClaimsIdentity Identity { get; set; }
+        public RequestContext Request { get; set; }
     }
 }

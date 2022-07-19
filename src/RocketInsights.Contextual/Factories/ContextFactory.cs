@@ -10,11 +10,13 @@ namespace RocketInsights.Contextual.Factories
     {
         private IFactory<CultureInfo> CultureFactory { get; }
         private IFactory<ClaimsIdentity> IdentityFactory { get; }
+        private IFactory<RequestContext> RequestFactory { get; }
 
-        public ContextFactory(IFactory<CultureInfo> cultureFactory, IFactory<ClaimsIdentity> identityFactory)
+        public ContextFactory(IFactory<CultureInfo> cultureFactory, IFactory<ClaimsIdentity> identityFactory, IFactory<RequestContext> requestFactory)
         {
             CultureFactory = cultureFactory;
             IdentityFactory = identityFactory;
+            RequestFactory = requestFactory;
         }
 
         public async Task<Context> Create()
@@ -22,7 +24,8 @@ namespace RocketInsights.Contextual.Factories
             var context = new Context
             {
                 Culture = await CultureFactory.Create(),
-                Identity = await IdentityFactory.Create()
+                Identity = await IdentityFactory.Create(),
+                Request = await RequestFactory.Create()
             };
 
             return context;

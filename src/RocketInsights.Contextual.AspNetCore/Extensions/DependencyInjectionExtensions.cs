@@ -21,6 +21,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IFactory<CultureInfo>, ThreadCultureFactory>();
             services.AddSingleton<IFactory<ClaimsIdentity>, HttpHeadersIdentityFactory>();
+            services.AddSingleton<IFactory<RequestContext>, HttpBodyRequestFactory>();
+
             services.AddSingleton<IFactory<Context>, ContextFactory>(); // The factories above should come from options instead of being fixed
             
             services.AddSingleton<IContextService, ContextService>();
