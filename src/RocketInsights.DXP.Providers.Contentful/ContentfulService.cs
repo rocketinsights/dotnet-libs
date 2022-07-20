@@ -28,7 +28,7 @@ namespace RocketInsights.DXP.Providers.Contentful
         {
             if (ContextService.TryGetContext(out var context))
             {
-                var fragmentEntry = ContentfulProxy.GetEntryAsync<Content>(id, context.Culture?.Name ?? "en-US").Result;
+                var fragmentEntry = ContentfulProxy.GetEntryByIdAsync<Content>(id, context.Culture?.Name ?? "en-US").Result;
                 if (fragmentEntry != null)
                 {
                     var fragment = new Fragment()

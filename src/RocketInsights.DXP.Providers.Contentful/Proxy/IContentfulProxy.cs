@@ -8,6 +8,6 @@ namespace RocketInsights.DXP.Providers.Contentful.Proxy
 {
     public interface IContentfulProxy
     {
-        Task<Entry<T>> GetEntryAsync<T>(string entryId, string locale = "*");
+        Task<Entry<T>> GetEntryByIdAsync<T>(string entryId, string locale = "*");
     }
 }
