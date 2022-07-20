@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RocketInsights.DXP.Providers.Contentful
 {
-    public class ContentfulService : IExperienceService
+    public class ContentfulService : ILayoutService, IContentService
     {
         private IContextService ContextService { get; }
         private IContentfulProxy ContentfulProxy { get; }

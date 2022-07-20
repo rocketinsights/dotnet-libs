@@ -47,7 +47,7 @@ namespace RocketInsights.DXP.Providers.Contentful.Tests
                 Identity = new ClaimsIdentity()
             });
 
-            var experienceService = provider.GetRequiredService<IExperienceService>();
+            var experienceService = provider.GetRequiredService<IContentService>();
 
             var fragment = await experienceService.GetFragmentAsync("3EK9sDbFFm69x1azZdd6MJ");
             Assert.AreEqual("3EK9sDbFFm69x1azZdd6MJ", fragment.Id);
