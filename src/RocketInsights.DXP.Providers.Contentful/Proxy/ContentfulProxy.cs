@@ -19,9 +19,11 @@ namespace RocketInsights.DXP.Providers.Contentful.Proxy
 
         //TODO: Handle API errors, including rate limiting
 
-        public async Task<Entry<T>> GetEntryAsync<T>(string entryId)
+        public async Task<Entry<T>> GetEntryAsync<T>(string entryId, string locale = "*")
         {
-            var entry = await ContentfulClient.GetEntry<Entry<T>>(entryId);
+            var query = QueryBuilder<Entry<T>>.New;
+            query.LocaleIs(locale);
+            var entry = await ContentfulClient.GetEntry<Entry<T>>(entryId, query);
             return entry;
         }
     }

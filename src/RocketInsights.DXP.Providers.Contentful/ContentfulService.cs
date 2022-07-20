@@ -1,8 +1,7 @@
-﻿using Contentful.Core.Models;
+﻿using RocketInsights.Common.Models;
 using RocketInsights.Contextual.Services;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Providers.Contentful.Proxy;
-using RocketInsights.DXP.Providers.Contentful.Types;
 using RocketInsights.DXP.Services;
 using System;
 using System.Threading.Tasks;
@@ -27,8 +26,28 @@ namespace RocketInsights.DXP.Providers.Contentful
 
         public Task<Fragment> GetFragmentAsync(string id)
         {
-            Entry<object> fragmentEntry = ContentfulProxy.GetEntryAsync<object>(id).Result;
-            throw new NotImplementedException();
+            if (ContextService.TryGetContext(out var context))
+            {
+                var fragmentEntry = ContentfulProxy.GetEntryAsync<Content>(id, context.Culture?.Name ?? "en-US").Result;
+                if (fragmentEntry != null)
+                {
+                    var fragment = new Fragment()
+                    {
+                        Id = fragmentEntry.SystemProperties.Id,
+                        ContentType = fragmentEntry.SystemProperties.ContentType.Name,
+                        Content = fragmentEntry.Fields
+                    };
+                    return Task.FromResult(fragment);
+                }
+                else
+                {
+                    throw new Exception($"Unable to fetch Fragment: {id}");
+                }
+            }
+            else
+            {
+                throw new Exception("Unable to fetch context");
+            }
         }
     }
 }
