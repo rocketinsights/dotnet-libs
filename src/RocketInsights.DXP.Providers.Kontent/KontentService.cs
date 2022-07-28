@@ -7,7 +7,9 @@ using RocketInsights.DXP.Providers.Kontent.Common;
 using RocketInsights.DXP.Providers.Kontent.Extensions;
 using RocketInsights.DXP.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -18,6 +20,8 @@ namespace RocketInsights.DXP.Providers.Kontent
         private IContextService ContextService { get; }
 
         private IRestRunner RestRunner { get; set; }
+
+        private readonly Dictionary<string, Fragment> processedFragments = new Dictionary<string, Fragment>();
 
         public KontentService(IContextService contextService, IRestRunner restRunner)
         {
@@ -42,6 +46,11 @@ namespace RocketInsights.DXP.Providers.Kontent
         {
             if (!ContextService.TryGetContext(out _))
                 throw new Exception("Unable to retrieve a context");
+
+            if (processedFragments.TryGetValue(id, out var existingFragment))
+                return existingFragment;
+            else
+                processedFragments.Add(id, new Fragment());
 
             var response = await RestRunner.Execute(
                 new RestRequestProperties
@@ -95,12 +104,13 @@ namespace RocketInsights.DXP.Providers.Kontent
                 fragment.Content.Add(fragmentElement.Key, fragmentElement.Value);
             }
 
+            processedFragments[id] = fragment;
             return fragment;
         }
 
-        private async Task<Dictionary<string, object>> GetFragmentElements(Dictionary<string, object> fragmentElements, 
-            JsonElement rootElement, 
-            JsonElement value, 
+        private async Task<Dictionary<string, object>> GetFragmentElements(Dictionary<string, object> fragmentElements,
+            JsonElement rootElement,
+            JsonElement value,
             string key)
         {
             var elementType = rootElement.GetProperty("type").GetString();
@@ -112,7 +122,18 @@ namespace RocketInsights.DXP.Providers.Kontent
                 else
                     fragmentElements.Add(key, JsonSerializer.Deserialize<object>(value) ?? new object());
             }
-            else if (value.ValueKind == JsonValueKind.Array &&
+            else
+                fragmentElements = await ProcessJsonElementArray(value, fragmentElements, key, elementType).ConfigureAwait(false);
+
+            return fragmentElements;
+        }
+
+        private async Task<Dictionary<string, object>> ProcessJsonElementArray(JsonElement value,
+            Dictionary<string, object> fragmentElements,
+            string key,
+            string? elementType)
+        {
+            if (value.ValueKind == JsonValueKind.Array &&
                 (elementType == ElementTypeConstants.MultipleChoice || elementType == ElementTypeConstants.Taxonomy))
             {
                 var values = new List<string>();
@@ -131,7 +152,21 @@ namespace RocketInsights.DXP.Providers.Kontent
                 foreach (var item in value.EnumerateArray())
                 {
                     var fragmentDetails = await GetFragmentAsync(item.ToString()).ConfigureAwait(false);
-                    fragmentElements.Add(key, fragmentDetails);
+
+                    if (fragmentElements.TryGetValue(key, out var keyElement))
+                    {
+                        var type = keyElement.GetType();
+                        if (type.IsArray)
+                        {
+                            var keyElements = ((IEnumerable)keyElement).Cast<Fragment>().ToList();
+                            keyElements.Add(fragmentDetails);
+                            fragmentElements[key] = keyElement;
+                        }
+                        else
+                            fragmentElements[key] = new object[] { keyElement, fragmentDetails };
+                    }
+                    else
+                        fragmentElements.Add(key, fragmentDetails);
                 }
             }
 
