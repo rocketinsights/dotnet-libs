@@ -9,9 +9,10 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddKontent(this IServiceCollection services)
         {
-            services.AddSingleton<ILayoutService, KontentService>();
-            services.AddSingleton<IContentService, KontentService>();
+            services.AddSingleton<ILayoutService, LayoutService>();
+            services.AddSingleton<IContentService, ContentService>();
             services.AddSingleton<IRestRunner, RestRunner>();
+            services.AddSingleton<IKontentApiEngine, KontentApiEngine>();
 
             return services;
         }
