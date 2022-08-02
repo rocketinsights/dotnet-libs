@@ -25,7 +25,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
             ServiceCollection.AddKontent();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task TestRetrievingAContentFragmentFromKontent()
         {
             var provider = ServiceCollection
