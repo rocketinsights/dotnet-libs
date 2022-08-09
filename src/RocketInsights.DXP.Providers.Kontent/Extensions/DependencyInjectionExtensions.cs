@@ -1,7 +1,6 @@
 ﻿using RocketInsights.DXP.Providers.Kontent;
 using RocketInsights.DXP.Providers.Kontent.ApiRunnerEngine;
 using RocketInsights.DXP.Services;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

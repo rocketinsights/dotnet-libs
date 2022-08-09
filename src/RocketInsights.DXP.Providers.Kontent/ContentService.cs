@@ -1,4 +1,5 @@
-﻿using RocketInsights.Common.Models;
+﻿using RocketInsights.Common.Extensions;
+using RocketInsights.Common.Models;
 using RocketInsights.Contextual.Services;
 using RocketInsights.DXP.Models;
 using RocketInsights.DXP.Providers.Kontent.ApiRunnerEngine;
@@ -42,39 +43,33 @@ namespace RocketInsights.DXP.Providers.Kontent
             if (string.IsNullOrWhiteSpace(response))
                 throw new Exception("Unable to retrieve fragment");
 
-            using var jsonDocument = JsonDocument.Parse(response);
+            var content = response.Deserialize<Content>();
+
+            if (!(content.GetValueAsObject("item") is Dictionary<string, object> item))
+                return new Fragment();
+
+            var systemDictionary = item.GetValueAsDictionary("system");
+
             var fragment = new Fragment()
             {
-                Id = jsonDocument.RootElement.GetSubProperty("item.system.codename")?.ToString(),
-                Name = jsonDocument.RootElement.GetSubProperty("item.system.name")?.ToString(),
-                Guid = new Guid(jsonDocument.RootElement.GetSubProperty("item.system.id")?.ToString()),
+                Id = systemDictionary?.GetValueAsObject("codename")?.ToString(),
+                Name = systemDictionary?.GetValueAsObject("name")?.ToString(),
+                Guid = new Guid(systemDictionary?.GetValueAsObject("id")?.ToString()),
                 Template = new Template()
                 {
-                    Name = jsonDocument.RootElement.GetSubProperty("item.system.type")?.ToString(),
+                    Name = systemDictionary?.GetValueAsObject("type")?.ToString(),
                 },
                 Content = new Content()
             };
 
-            var elementsProperty = jsonDocument.RootElement.GetSubProperty("item.elements");
-
-            if (elementsProperty == null)
-                return fragment;
-
-            var elementObjects = JsonSerializer.Deserialize<Dictionary<string, object>>((JsonElement)elementsProperty);
-            if (elementObjects == null)
+            if (!(item.GetValueAsObject("elements") is Dictionary<string, object> elementsDictionary))
                 return fragment;
 
             var fragmentElements = new Dictionary<string, object>();
 
-            foreach (var elementObject in elementObjects)
+            foreach (var rootElement in elementsDictionary)
             {
-                var rootElement = JsonDocument.Parse(JsonSerializer.Serialize(elementObject.Value)).RootElement;
-                var value = rootElement.GetSubProperty("value");
-
-                if (value == null)
-                    return fragment;
-
-                fragmentElements = await GetFragmentElements(fragmentElements, rootElement, (JsonElement)value, elementObject.Key).ConfigureAwait(false);
+                fragmentElements = await GetFragmentElements(fragmentElements, rootElement.Value as Dictionary<string, object>, rootElement.Key).ConfigureAwait(false);
             }
 
             foreach (var fragmentElement in fragmentElements)
@@ -87,65 +82,68 @@ namespace RocketInsights.DXP.Providers.Kontent
         }
 
         private async Task<Dictionary<string, object>> GetFragmentElements(Dictionary<string, object> fragmentElements,
-            JsonElement rootElement,
-            JsonElement value,
+            Dictionary<string, object>? rootElement,
             string key)
         {
-            var elementType = rootElement.GetProperty("type").GetString();
+            if (rootElement == null)
+                return fragmentElements;
 
-            if (value.ValueKind != JsonValueKind.Array || elementType == ElementTypeConstants.Asset)
+            var elementType = rootElement.GetValueAsObject("type")?.ToString();
+            var value = rootElement.GetValueAsObject("value");
+
+            if (value != null && !(value is List<object>) || elementType == ElementTypeConstants.Asset)
             {
                 if (elementType == ElementTypeConstants.Asset)
-                    fragmentElements.Add(key, rootElement.GetSubProperty("url") ?? new object());
+                    fragmentElements.Add(key, rootElement.GetValueAsObject("url") ?? new object());
                 else
-                    fragmentElements.Add(key, JsonSerializer.Deserialize<object>(value) ?? new object());
+                    fragmentElements.Add(key, value ?? new object());
             }
-            else
-                fragmentElements = await ProcessJsonElementArray(value, fragmentElements, key, elementType).ConfigureAwait(false);
+            else if (value != null)
+                fragmentElements = await ProcessElementArray(value, fragmentElements, key, elementType).ConfigureAwait(false);
 
             return fragmentElements;
         }
 
-        private async Task<Dictionary<string, object>> ProcessJsonElementArray(JsonElement value,
+        private async Task<Dictionary<string, object>> ProcessElementArray(object value,
             Dictionary<string, object> fragmentElements,
             string key,
             string? elementType)
         {
-            if (value.ValueKind == JsonValueKind.Array &&
-                (elementType == ElementTypeConstants.MultipleChoice || elementType == ElementTypeConstants.Taxonomy))
+            if (!(value is List<object> valueList))
+                return fragmentElements;
+
+            if (elementType == ElementTypeConstants.MultipleChoice || elementType == ElementTypeConstants.Taxonomy)
             {
                 var values = new List<string>();
-                foreach (var item in value.EnumerateArray())
-                {
-                    var name = item.GetSubProperty("name");
 
+                foreach (var item in valueList)
+                {
+                    var name = (item as Dictionary<string, object>).GetValueAsObject("name");
                     if (name != null)
                         values.Add(name.ToString());
                 }
 
                 fragmentElements.Add(key, values);
+                return fragmentElements;
             }
-            else
-            {
-                foreach (var item in value.EnumerateArray())
-                {
-                    var fragmentDetails = await GetFragmentAsync(item.ToString()).ConfigureAwait(false);
 
-                    if (fragmentElements.TryGetValue(key, out var keyElement))
-                    {
-                        var type = keyElement.GetType();
-                        if (type.IsArray)
-                        {
-                            var keyElements = ((IEnumerable)keyElement).Cast<Fragment>().ToList();
-                            keyElements.Add(fragmentDetails);
-                            fragmentElements[key] = keyElement;
-                        }
-                        else
-                            fragmentElements[key] = new object[] { keyElement, fragmentDetails };
-                    }
-                    else
-                        fragmentElements.Add(key, fragmentDetails);
+            foreach (var item in valueList)
+            {
+                var fragmentDetails = await GetFragmentAsync(item.ToString()).ConfigureAwait(false);
+                if (!fragmentElements.TryGetValue(key, out var keyElement))
+                {
+                    fragmentElements.Add(key, fragmentDetails);
+                    continue;
                 }
+
+                if (keyElement.GetType().IsArray)
+                {
+                    var keyElements = ((IEnumerable)keyElement).Cast<Fragment>().ToList();
+                    keyElements.Add(fragmentDetails);
+                    fragmentElements[key] = keyElement;
+                }
+                else
+                    fragmentElements[key] = new object[] { keyElement, fragmentDetails };
             }
 
             return fragmentElements;

@@ -39,83 +39,89 @@ namespace RocketInsights.DXP.Providers.Kontent
             if (string.IsNullOrWhiteSpace(response))
                 throw new Exception("Unable to retrieve composition");
 
-            using var jsonDocument = JsonDocument.Parse(response);
-            var compositionItems = jsonDocument.RootElement.GetSubProperty("items");
-            if (compositionItems == null || ((JsonElement)compositionItems).GetArrayLength() == 0)
+            var content = response.Deserialize<Content>();
+
+            var compositionItems = content.GetValueAsObject("items");
+            if (compositionItems == null)
                 throw new Exception("Unable to retrieve composition");
 
-            var compositionItem = ((JsonElement)compositionItems)[0];
+            var compositionDictionary = ((IList<object>)compositionItems)[0] as Dictionary<string, object>;
+            var systemDictionary = compositionDictionary?.GetValueAsDictionary("system");
 
             var composition = new Composition()
             {
-                Id = compositionItem.GetSubProperty("system.codename")?.ToString(),
-                Name = compositionItem.GetSubProperty("system.name")?.ToString(),
-                Guid = new Guid(compositionItem.GetSubProperty("system.id")?.ToString()),
-                ContentType = compositionItem.GetSubProperty("system.type")?.ToString(),
+                Id = systemDictionary?.GetValueAsObject("codename")?.ToString(),
+                Name = systemDictionary?.GetValueAsObject("name")?.ToString(),
+                Guid = new Guid(systemDictionary?.GetValueAsObject("id")?.ToString()),
+                ContentType = systemDictionary?.GetValueAsObject("type")?.ToString(),
                 Content = new Content()
             };
 
             composition.Content.Add("slug", $"/{uri}");
 
-            var elementsProperty = compositionItem.GetSubProperty("elements");
-            if (elementsProperty == null)
+            if (compositionDictionary == null)
                 return composition;
 
-            composition.Regions = await GetRegionsAsync((JsonElement)elementsProperty).ConfigureAwait(false);
+            if (!(compositionDictionary.GetValueAsObject("elements") is Dictionary<string, object> elementsDictionary))
+                return composition;
+
+            composition.Regions = await GetRegionsAsync(elementsDictionary).ConfigureAwait(false);
 
             return await Task.FromResult(composition);
         }
 
-        private async Task<List<Region>> GetRegionsAsync(JsonElement jsonElements)
+        private async Task<List<Region>> GetRegionsAsync(Dictionary<string, object>? elementsDictionary)
         {
             var regions = new List<Region>();
+            if (elementsDictionary == null)
+                return regions;
 
-            var regionsElement = jsonElements.GetSubProperty("regions");
-            if (regionsElement != null)
+            if (!(elementsDictionary.GetValueAsObject("regions") is Dictionary<string, object> regionsDictionary))
+                return regions;
+
+            if (!( regionsDictionary.GetValueAsObject("value") is List<object> regionsValues))
+                return regions;
+
+            foreach (var regionsValue in regionsValues)
             {
-                var regionsValues = ((JsonElement)regionsElement).GetSubProperty("value");
-                if (regionsValues != null)
+                var regionDetails = await KontentApiEngine.GetContentItem(regionsValue.ToString()).ConfigureAwait(false);
+                if (string.IsNullOrWhiteSpace(regionDetails))
+                    continue;
+
+                var content = regionDetails.Deserialize<Content>();
+
+                if (!(content.GetValueAsObject("item") is Dictionary<string, object> regionItem))
+                    continue;
+
+                var systemDictionary = regionItem.GetValueAsDictionary("system");
+                var regionElements = regionItem.GetValueAsDictionary("elements");
+
+                var region = new Region
                 {
-                    foreach (var regionsValue in ((JsonElement)regionsValues).EnumerateArray())
+                    Name = systemDictionary?.GetValueAsObject("name")?.ToString(),
+                    ContentType = systemDictionary?.GetValueAsObject("type")?.ToString(),
+                    Id = systemDictionary?.GetValueAsObject("codename")?.ToString(),
+                    Regions = regionElements != null 
+                        ? await GetRegionsAsync(regionElements).ConfigureAwait(false) 
+                        : new List<Region>()
+                };
+
+                var fragmentsElement = regionElements != null 
+                    ? regionElements.GetValueAsDictionary("fragments") 
+                    : null;
+
+                if (fragmentsElement != null &&  fragmentsElement.GetValueAsObject("value") is List<object> fragmentValues)
+                {
+                    var fragments = new List<Fragment>();
+                    foreach (var fragmentsValue in fragmentValues)
                     {
-                        var regionDetails = await KontentApiEngine.GetContentItem(regionsValue.ToString()).ConfigureAwait(false);
-                        if (string.IsNullOrWhiteSpace(regionDetails))
-                            continue;
-
-                        using var jsonDocument = JsonDocument.Parse(regionDetails);
-                        var regionItem = jsonDocument.RootElement.GetSubProperty("item");
-                        if (regionItem == null)
-                            continue;
-
-                        var regionElements = ((JsonElement)regionItem).GetSubProperty("elements");
-
-                        var region = new Region
-                        {
-                            Name = ((JsonElement)regionItem).GetSubProperty("system.name")?.ToString(),
-                            ContentType = ((JsonElement)regionItem).GetSubProperty("system.type")?.ToString(),
-                            Id = ((JsonElement)regionItem).GetSubProperty("system.codename")?.ToString(),
-                            Regions = regionElements != null ? await GetRegionsAsync((JsonElement)regionElements).ConfigureAwait(false) : new List<Region>()
-                        };
-
-                        var fragmentsElement = regionElements != null ? ((JsonElement)regionElements).GetSubProperty("fragments") : null;
-                        if (fragmentsElement != null)
-                        {
-                            var fragmentValues = ((JsonElement)fragmentsElement).GetSubProperty("value");
-                            if (fragmentValues != null)
-                            {
-                                var fragments = new List<Fragment>();
-                                foreach (var fragmentsValue in ((JsonElement)fragmentValues).EnumerateArray())
-                                {
-                                    fragments.Add(await ContentService.GetFragmentAsync(fragmentsValue.ToString()).ConfigureAwait(false));
-                                }
-
-                                region.Fragments = fragments;
-                            }
-                        }
-
-                        regions.Add(region);
+                        fragments.Add(await ContentService.GetFragmentAsync(fragmentsValue.ToString()).ConfigureAwait(false));
                     }
+
+                    region.Fragments = fragments;
                 }
+
+                regions.Add(region);
             }
 
             return regions;
