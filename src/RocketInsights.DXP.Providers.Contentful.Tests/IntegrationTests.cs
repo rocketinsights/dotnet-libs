@@ -35,7 +35,7 @@ namespace RocketInsights.DXP.Providers.Contentful.Tests
                
         }
 
-        [TestMethod]
+        //[TestMethod]
         public async Task TestRetrievingAContentFragmentFromContentful()
         {
             var provider = ServiceCollection.BuildServiceProvider();
