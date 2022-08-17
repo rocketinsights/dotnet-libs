@@ -25,7 +25,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
             ServiceCollection.AddKontent();
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public async Task TestRetrievingAContentFragmentFromKontent()
         {
             var provider = ServiceCollection
@@ -48,7 +48,6 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
             var experienceService = provider.GetRequiredService<IExperienceService>();
 
             var fragment = await experienceService.GetFragmentAsync("about_us_f869f8f");
-            var test = "";
 
             Assert.IsNotNull(fragment);
         }
@@ -79,7 +78,6 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
             var experienceService = provider.GetRequiredService<IExperienceService>();
 
             var composition = await experienceService.GetCompositionAsync();
-            var test = "";
 
             Assert.IsNotNull(composition);
         }
