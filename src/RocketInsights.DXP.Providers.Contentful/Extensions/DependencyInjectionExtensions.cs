@@ -14,7 +14,7 @@ namespace RocketInsights.DXP.Providers.Contentful.Extensions
         {
             services.AddSingleton<IContentfulClient>(s => InitContentfulClient(configuration));
 
-            services.AddSingleton<IExperienceService, ContentfulService>();
+            services.AddSingleton<IContentService, ContentService>();
             services.AddSingleton<IContentfulProxy, ContentfulProxy>();
 
             return services;

@@ -8,20 +8,15 @@ using System.Threading.Tasks;
 
 namespace RocketInsights.DXP.Providers.Contentful
 {
-    public class ContentfulService : ILayoutService, IContentService
+    public class ContentService : IContentService
     {
         private IContextService ContextService { get; }
         private IContentfulProxy ContentfulProxy { get; }
 
-        public ContentfulService(IContextService contextService, IContentfulProxy contentfulProxy)
+        public ContentService(IContextService contextService, IContentfulProxy contentfulProxy)
         {
             ContextService = contextService;
             ContentfulProxy = contentfulProxy;
-        }
-
-        public Task<Composition> GetCompositionAsync()
-        {
-            throw new NotImplementedException();
         }
 
         public Task<Fragment> GetFragmentAsync(string id)
