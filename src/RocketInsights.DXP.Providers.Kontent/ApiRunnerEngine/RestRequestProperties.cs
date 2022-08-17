@@ -2,7 +2,6 @@
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RocketInsights.DXP.Providers.Kontent.ApiRunnerEngine
 {

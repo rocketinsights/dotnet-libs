@@ -1,18 +1,10 @@
 ﻿using RocketInsights.Common.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json;
 
 namespace RocketInsights.Common.Extensions
 {
     public static class ContentExtensions
     {
-        private static JsonSerializerOptions JsonOptions => new JsonSerializerOptions()
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        };
-
         public static bool TryParse<T>(this Content content, string key, out T parsed)
         {
             parsed = default;
@@ -21,9 +13,9 @@ namespace RocketInsights.Common.Extensions
             {
                 if (content.TryGetValue(key, out object obj))
                 {
-                    var json = JsonSerializer.Serialize(obj, JsonOptions);
+                    var json = obj.Serialize();
 
-                    parsed = JsonSerializer.Deserialize<T>(json, JsonOptions);
+                    parsed = json.Deserialize<T>();
 
                     return true;
                 }

@@ -25,7 +25,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
             ServiceCollection.AddKontent();
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public async Task TestRetrievingAContentFragmentFromKontent()
         {
             var provider = ServiceCollection
@@ -47,9 +47,41 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 
             var experienceService = provider.GetRequiredService<IExperienceService>();
 
-            var fragment = await experienceService.GetFragmentAsync("title_test");
+            var fragment = await experienceService.GetFragmentAsync("about_us_f869f8f");
+            var test = "";
 
-            Assert.AreEqual("Untitled content item", fragment.Name);
+            Assert.IsNotNull(fragment);
+        }
+
+        [TestMethod]
+        public async Task TestRetrievingACompositionFromKontent()
+        {
+            var provider = ServiceCollection
+                .AddHttpContextAccessor()
+                .AddContextual()
+                .AddSingleton<IContextStore, DefaultContextStore>()
+                .AddDXP()
+                .AddKontent()
+                .BuildServiceProvider();
+
+            var contextStore = provider.GetRequiredService<IContextStore>();
+
+            contextStore.Set("context", new Context()
+            {
+                Culture = new CultureInfo("en-US"),
+                Identity = new ClaimsIdentity(),
+                Content = new Content
+                {
+                    { "uri", "about-us" }
+                }
+            });
+
+            var experienceService = provider.GetRequiredService<IExperienceService>();
+
+            var composition = await experienceService.GetCompositionAsync();
+            var test = "";
+
+            Assert.IsNotNull(composition);
         }
     }
 }
