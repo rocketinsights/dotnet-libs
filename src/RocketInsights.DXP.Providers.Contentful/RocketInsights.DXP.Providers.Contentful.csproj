@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <UserSecretsId>0085a9fb-bf75-4b62-a03f-9d9680f176c9</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="contentful.csharp" Version="7.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RocketInsights.Contextual\RocketInsights.Contextual.csproj" />
+    <ProjectReference Include="..\RocketInsights.DXP.Common\RocketInsights.DXP.csproj" />
+  </ItemGroup>
+
+</Project>
