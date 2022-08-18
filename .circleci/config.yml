@@ -9,4 +9,8 @@ workflows:
   default:
     jobs:
       - dotnet/build-test-pack-push:
+          filters:
+            branches:
+              only:
+                - main
           context: team-dotnet
