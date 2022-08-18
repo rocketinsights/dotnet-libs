@@ -14,3 +14,9 @@ workflows:
               only:
                 - main
           context: team-dotnet
+      - dotnet/build-test:
+          filters:
+            branches:
+              ignore:
+                - main
+          context: team-dotnet
