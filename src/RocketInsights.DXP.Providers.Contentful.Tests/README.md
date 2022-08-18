@@ -1,0 +1,1 @@
+Please see the readme in `RocketInsights.DXP.Providers.Contentful` project for details about required config settings needed to run this.
