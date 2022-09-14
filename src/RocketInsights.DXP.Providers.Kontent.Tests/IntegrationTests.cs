@@ -35,6 +35,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 .AddSingleton<IContextStore, DefaultContextStore>()
                 .AddDXP()
                 .AddKontent()
+                .AddDistributedMemoryCache()
                 .BuildServiceProvider();
 
             var contextStore = provider.GetRequiredService<IContextStore>();
