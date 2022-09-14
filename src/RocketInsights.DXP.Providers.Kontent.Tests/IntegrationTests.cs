@@ -23,6 +23,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
 
             ServiceCollection.AddDXP();
             ServiceCollection.AddKontent();
+            ServiceCollection.AddDistributedMemoryCache();
         }
 
         [TestMethod]
@@ -34,6 +35,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 .AddSingleton<IContextStore, DefaultContextStore>()
                 .AddDXP()
                 .AddKontent()
+                .AddDistributedMemoryCache()
                 .BuildServiceProvider();
 
             var contextStore = provider.GetRequiredService<IContextStore>();
@@ -61,6 +63,7 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 .AddSingleton<IContextStore, DefaultContextStore>()
                 .AddDXP()
                 .AddKontent()
+                .AddDistributedMemoryCache()
                 .BuildServiceProvider();
 
             var contextStore = provider.GetRequiredService<IContextStore>();
@@ -71,15 +74,17 @@ namespace RocketInsights.DXP.Providers.Kontent.Tests
                 Identity = new ClaimsIdentity(),
                 Content = new Content
                 {
-                    { "uri", "about-us" }
+                    { "uri", "/about-us" }
                 }
             });
 
             var experienceService = provider.GetRequiredService<IExperienceService>();
 
             var composition = await experienceService.GetCompositionAsync();
+            var composition1 = await experienceService.GetCompositionAsync();
 
             Assert.IsNotNull(composition);
+            Assert.IsNotNull(composition1);
         }
     }
 }

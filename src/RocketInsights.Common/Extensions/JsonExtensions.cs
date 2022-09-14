@@ -1,4 +1,5 @@
 ﻿using RocketInsights.Common.Json.Converters;
+using System.Text;
 using System.Text.Json;
 
 namespace RocketInsights.Common.Extensions
@@ -19,9 +20,20 @@ namespace RocketInsights.Common.Extensions
             return JsonSerializer.Serialize(obj, JsonOptions);
         }
 
+        public static byte[] ToByteAray<T>(this T source)
+        {
+            return JsonSerializer.SerializeToUtf8Bytes(source);
+        }
+
         public static T Deserialize<T>(this string json)
         {
             return JsonSerializer.Deserialize<T>(json, JsonOptions);
+        }
+
+        public static T Deserialize<T>(this byte[] source)
+        {
+            var sourceString = Encoding.UTF8.GetString(source);
+            return JsonSerializer.Deserialize<T>(sourceString);
         }
     }
 }

@@ -7,7 +7,8 @@ namespace RocketInsights.DXP.Providers.Kontent.ApiRunnerEngine
 {
     public interface IKontentApiEngine
     {
-        Task<string?> GetContentItem(string codename);
-        Task<string?> GetComposition(Uri uri);
+        Task<string?> GetContentItem(string codename, string? elements = null, string? systemType = null);
+        Task<string?> GetComposition(string codename);
+        Task<string?> GetSubpages(string url);
     }
 }
